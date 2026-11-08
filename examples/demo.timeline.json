@@ -1,0 +1,36 @@
+{
+  "input": "raw.mp4",
+  "output": "output/octoedit-demo.mp4",
+  "style": {
+    "font": "Arial",
+    "fontSize": 66,
+    "textColor": "&H00FFFFFF",
+    "outlineColor": "&H0041FAF1",
+    "marginV": 250
+  },
+  "grade": {
+    "contrast": 1.12,
+    "brightness": -0.025,
+    "saturation": 0.92
+  },
+  "events": [
+    {
+      "type": "title",
+      "start": 1,
+      "end": 3.5,
+      "text": "چرا سایتت مشتری جذب نمی‌کنه؟",
+      "position": "top",
+      "fontSize": 68
+    },
+    {
+      "type": "zoom",
+      "start": 5,
+      "end": 7,
+      "amount": 1.07
+    }
+  ],
+  "render": {
+    "preset": "veryfast",
+    "crf": 21
+  }
+}

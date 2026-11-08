@@ -1,0 +1,11 @@
+{
+  "name": "octoedit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local-first natural-language-assisted video editing engine for Octoopus",
+  "scripts": {
+    "render": "node src/render.js examples/demo.timeline.json"
+  },
+  "engines": { "node": ">=20" }
+}
