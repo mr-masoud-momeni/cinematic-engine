@@ -30,6 +30,23 @@ def parse_hex_color(value: str) -> tuple[int, int, int]:
     return b, g, r
 
 
+def guided_filter_alpha(frame: np.ndarray, alpha: np.ndarray, radius: int = 8, eps: float = 0.01) -> np.ndarray:
+    """Refine a soft person mask using image edges as guidance."""
+    guide = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY).astype(np.float32) / 255.0
+    mean_guide = cv2.boxFilter(guide, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    mean_alpha = cv2.boxFilter(alpha, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    corr_guide = cv2.boxFilter(guide * guide, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    corr_guide_alpha = cv2.boxFilter(guide * alpha, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    variance = corr_guide - mean_guide * mean_guide
+    covariance = corr_guide_alpha - mean_guide * mean_alpha
+    a = covariance / (variance + eps)
+    b = mean_alpha - a * mean_guide
+    mean_a = cv2.boxFilter(a, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    mean_b = cv2.boxFilter(b, cv2.CV_32F, (2 * radius + 1, 2 * radius + 1))
+    refined = mean_a * guide + mean_b
+    return np.clip(refined, 0.0, 1.0)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Replace a video background locally with MediaPipe.")
     parser.add_argument("input", help="Source video (MP4/MOV/etc.)")
@@ -38,8 +55,12 @@ def main() -> int:
                         help="Solid background color in hex (default: #0a192f)")
     parser.add_argument("--threshold", type=float, default=0.12,
                         help="Mask threshold, 0..1 (default: 0.12)")
-    parser.add_argument("--feather", type=float, default=1.2,
-                        help="Mask edge blur sigma in pixels (default: 1.2)")
+    parser.add_argument("--feather", type=float, default=0.6,
+                        help="Mask edge blur sigma in pixels (default: 0.6)")
+    parser.add_argument("--guided-radius", type=int, default=8,
+                        help="Guided-filter radius in pixels (default: 8)")
+    parser.add_argument("--guided-eps", type=float, default=0.01,
+                        help="Guided-filter regularization (default: 0.01)")
     parser.add_argument("--model", type=int, choices=(0, 1), default=0,
                         help="MediaPipe model: 0 general (recommended), 1 landscape")
     parser.add_argument("--ffmpeg", default="ffmpeg", help="FFmpeg executable")
@@ -56,6 +77,10 @@ def main() -> int:
         parser.error("--threshold must be between 0 and 1.")
     if args.feather < 0:
         parser.error("--feather cannot be negative.")
+    if args.guided_radius < 1:
+        parser.error("--guided-radius must be at least 1.")
+    if args.guided_eps <= 0:
+        parser.error("--guided-eps must be positive.")
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     silent_video = destination.with_name(destination.stem + ".video-only.mp4")
@@ -111,6 +136,11 @@ def main() -> int:
                     1.0,
                 ).astype(np.float32)
                 alpha = cv2.resize(alpha, (width, height), interpolation=cv2.INTER_LINEAR)
+                # Refine the matte against real image edges to reduce halos around
+                # hair, ears, neck and shoulders.
+                alpha = guided_filter_alpha(
+                    frame, alpha, radius=args.guided_radius, eps=args.guided_eps
+                )
                 if args.feather > 0:
                     alpha = cv2.GaussianBlur(alpha, (0, 0), args.feather)
                 alpha = alpha[:, :, None]
