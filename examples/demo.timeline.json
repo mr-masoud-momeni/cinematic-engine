@@ -17,8 +17,8 @@
     "engine": "rvm",
     "variant": "mobilenetv3",
     "device": "cpu",
-    "rvmDirectory": "../rvm-test",
-    "checkpoint": "../rvm-test/rvm_mobilenetv3.pth",
+    "rvmDirectory": "rvm-test",
+    "checkpoint": "rvm-test/rvm_mobilenetv3.pth",
     "downsampleRatio": 0.25,
     "sequenceChunk": 1,
     "workers": 0
