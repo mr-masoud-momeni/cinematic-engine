@@ -45,7 +45,7 @@
       "contrast": 1.03,
       "saturation": 0.96
     },
-    "edgeSoftness": 0.8,
+    "edgeSoftness": 1.5,
     "environmentLight": {
       "enabled": true,
       "strength": 0.28
