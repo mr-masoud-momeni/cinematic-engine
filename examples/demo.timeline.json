@@ -48,10 +48,11 @@
     "edgeSoftness": 0.8,
     "cinematic": {
       "enabled": true,
-      "vignette": 0.18,
-      "grain": 2,
-      "sharpen": 0.18,
-      "bloom": 0.08
+      "vignette": 0.42,
+      "grain": 5.5,
+      "sharpen": 0.42,
+      "bloom": 0.28,
+      "grade": 0.65
     }
   },
   "events": [
