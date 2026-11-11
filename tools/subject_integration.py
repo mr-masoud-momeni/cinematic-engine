@@ -60,6 +60,7 @@ def main() -> int:
     p.add_argument("--sharpen", type=float, default=0.18, help="Unsharp-mask amount, 0..2")
     p.add_argument("--bloom", type=float, default=0.08, help="Soft highlight bloom, 0..1")
     p.add_argument("--cinematic-grade", type=float, default=0.0, help="Global cool-shadow/warm-highlight grade, 0..1")
+    p.add_argument("--environment-light", type=float, default=0.18, help="Background-aware color bounce on subject edges, 0..1")
     p.add_argument("--ffmpeg", default="ffmpeg")
     p.add_argument("--crf", type=int, default=19)
     a = p.parse_args()
@@ -80,6 +81,8 @@ def main() -> int:
         p.error("Grain must be 0..20 and sharpen must be 0..2.")
     if not 0 <= a.cinematic_grade <= 1:
         p.error("Cinematic grade must be between 0 and 1.")
+    if not 0 <= a.environment_light <= 1:
+        p.error("Environment light must be between 0 and 1.")
 
     source = cv2.VideoCapture(str(src_path))
     matte = cv2.VideoCapture(str(alpha_path))
@@ -162,6 +165,21 @@ def main() -> int:
                     shadow = cv2.GaussianBlur(shadow, (0, 0), a.shadow_blur)
                 shadow = np.clip(shadow * a.shadow_strength, 0, 0.85)[..., None]
                 composed_bg = bg_f * (1.0 - shadow)
+
+                # Background-aware color bounce, sampled locally from the current background frame.
+                if a.environment_light > 0:
+                    matte_u8 = np.clip(alpha[..., 0] * 255, 0, 255).astype(np.uint8)
+                    inner = cv2.erode(matte_u8, np.ones((13, 13), np.uint8))
+                    edge_band = np.clip((matte_u8.astype(np.float32) - inner.astype(np.float32)) / 255.0, 0, 1)
+                    edge_band = cv2.GaussianBlur(edge_band, (0, 0), 5.0)
+                    bg_sample = cv2.GaussianBlur(bg_f, (0, 0), max(8.0, min(width, height) * 0.025))
+                    bg_luma = cv2.cvtColor(np.clip(bg_sample, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32)
+                    scene_luma = float(np.mean(bg_luma))
+                    neutral = np.mean(bg_sample, axis=2, keepdims=True)
+                    color_reflection = np.clip(bg_sample - neutral, -38.0, 38.0)
+                    brightness_reflection = np.clip((bg_luma - scene_luma)[..., None] * 0.10, -10.0, 10.0)
+                    bounce = (color_reflection * 0.45 + brightness_reflection) * edge_band[..., None]
+                    graded = np.clip(graded + bounce * a.environment_light, 0, 255)
 
                 # Edge light: a narrow matte boundary tinted by the environment.
                 if a.rim_strength > 0:
