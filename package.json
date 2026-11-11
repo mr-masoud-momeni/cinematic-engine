@@ -6,7 +6,10 @@
   "description": "Local-first natural-language-assisted video editing engine for Octoopus",
   "scripts": {
     "render": "node src/render.js examples/demo.timeline.json",
-    "remove-bg": "python tools/remove_background.py"
+    "remove-bg": "python tools/remove_background.py",
+    "render-bg": "python tools/render_with_background.py"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
