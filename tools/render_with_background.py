@@ -106,7 +106,7 @@ def main() -> int:
         effect_args += ["--warmth", "0", "--contrast", "1", "--saturation", "1"]
 
     integration_script = ROOT / "tools" / "subject_integration.py"
-    edge_softness = float(effects.get("edgeSoftness", 0.8))
+    edge_softness = float(effects.get("edgeSoftness", 1.5))
     cinematic = effects.get("cinematic", {})
     cinematic_enabled = cinematic.get("enabled", True)
     environment_light = effects.get("environmentLight", {})
