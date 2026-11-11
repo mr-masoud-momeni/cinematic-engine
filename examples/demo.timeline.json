@@ -13,6 +13,40 @@
     "brightness": -0.025,
     "saturation": 0.92
   },
+  "backgroundRemoval": {
+    "engine": "rvm",
+    "variant": "mobilenetv3",
+    "device": "cpu",
+    "rvmDirectory": "../rvm-test",
+    "checkpoint": "../rvm-test/rvm_mobilenetv3.pth",
+    "downsampleRatio": 0.25,
+    "sequenceChunk": 1,
+    "workers": 0
+  },
+  "background": {
+    "source": "background.png",
+    "fit": "cover"
+  },
+  "effects": {
+    "rimLight": {
+      "enabled": true,
+      "strength": 0.22
+    },
+    "shadow": {
+      "enabled": true,
+      "strength": 0.22,
+      "blur": 25,
+      "offsetX": 0,
+      "offsetY": 12
+    },
+    "colorGrade": {
+      "enabled": true,
+      "warmth": 0.04,
+      "contrast": 1.03,
+      "saturation": 0.96
+    },
+    "edgeSoftness": 0.8
+  },
   "events": [
     {
       "type": "title",
@@ -31,6 +65,6 @@
   ],
   "render": {
     "preset": "veryfast",
-    "crf": 21
+    "crf": 19
   }
 }
