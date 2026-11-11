@@ -59,6 +59,7 @@ def main() -> int:
     p.add_argument("--grain", type=float, default=2.0, help="Fine film grain intensity, 0..20")
     p.add_argument("--sharpen", type=float, default=0.18, help="Unsharp-mask amount, 0..2")
     p.add_argument("--bloom", type=float, default=0.08, help="Soft highlight bloom, 0..1")
+    p.add_argument("--cinematic-grade", type=float, default=0.0, help="Global cool-shadow/warm-highlight grade, 0..1")
     p.add_argument("--ffmpeg", default="ffmpeg")
     p.add_argument("--crf", type=int, default=19)
     a = p.parse_args()
@@ -77,6 +78,8 @@ def main() -> int:
         p.error("Vignette and bloom must be between 0 and 1.")
     if not 0 <= a.grain <= 20 or not 0 <= a.sharpen <= 2:
         p.error("Grain must be 0..20 and sharpen must be 0..2.")
+    if not 0 <= a.cinematic_grade <= 1:
+        p.error("Cinematic grade must be between 0 and 1.")
 
     source = cv2.VideoCapture(str(src_path))
     matte = cv2.VideoCapture(str(alpha_path))
@@ -175,6 +178,15 @@ def main() -> int:
                     graded = np.clip(graded + rim_layer, 0, 255)
 
                 result = graded * alpha + composed_bg * (1.0 - alpha)
+
+                # Apply a visible cool-shadow / warm-highlight look to the complete frame.
+                if a.cinematic_grade > 0:
+                    luminance = cv2.cvtColor(np.clip(result, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY).astype(np.float32) / 255.0
+                    shadows = (1.0 - luminance)[..., None]
+                    highlights_mask = luminance[..., None]
+                    result[..., 0] += shadows[..., 0] * (18.0 * a.cinematic_grade)
+                    result[..., 2] += highlights_mask[..., 0] * (13.0 * a.cinematic_grade)
+                    result = np.clip((result - 127.5) * (1.0 + 0.10 * a.cinematic_grade) + 127.5, 0, 255)
 
                 # Apply the cinematic finish to the complete frame, not just the subject.
                 if a.bloom > 0:
