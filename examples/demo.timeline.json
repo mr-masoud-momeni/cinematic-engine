@@ -46,6 +46,10 @@
       "saturation": 0.96
     },
     "edgeSoftness": 0.8,
+    "environmentLight": {
+      "enabled": true,
+      "strength": 0.28
+    },
     "cinematic": {
       "enabled": true,
       "vignette": 0.42,
