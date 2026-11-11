@@ -114,6 +114,7 @@ def main() -> int:
         "--grain", str(float(cinematic.get("grain", 2.0) if cinematic_enabled else 0)),
         "--sharpen", str(float(cinematic.get("sharpen", 0.18) if cinematic_enabled else 0)),
         "--bloom", str(float(cinematic.get("bloom", 0.08) if cinematic_enabled else 0)),
+        "--cinematic-grade", str(float(cinematic.get("grade", 0.0) if cinematic_enabled else 0)),
     ]
     crf = int(timeline.get("render", {}).get("crf", 19))
 
