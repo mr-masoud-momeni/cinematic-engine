@@ -55,6 +55,10 @@ def main() -> int:
     p.add_argument("--contrast", type=float, default=1.03, help="Foreground contrast")
     p.add_argument("--saturation", type=float, default=0.96, help="Foreground saturation")
     p.add_argument("--edge-softness", type=float, default=0.8, help="Matte feather in pixels")
+    p.add_argument("--vignette", type=float, default=0.18, help="Cinematic edge darkening, 0..1")
+    p.add_argument("--grain", type=float, default=2.0, help="Fine film grain intensity, 0..20")
+    p.add_argument("--sharpen", type=float, default=0.18, help="Unsharp-mask amount, 0..2")
+    p.add_argument("--bloom", type=float, default=0.08, help="Soft highlight bloom, 0..1")
     p.add_argument("--ffmpeg", default="ffmpeg")
     p.add_argument("--crf", type=int, default=19)
     a = p.parse_args()
@@ -69,6 +73,10 @@ def main() -> int:
             p.error(f"--{name} must be between 0 and 1.")
     if a.edge_softness < 0 or a.shadow_blur < 0:
         p.error("Blur/softness values cannot be negative.")
+    if not 0 <= a.vignette <= 1 or not 0 <= a.bloom <= 1:
+        p.error("Vignette and bloom must be between 0 and 1.")
+    if not 0 <= a.grain <= 20 or not 0 <= a.sharpen <= 2:
+        p.error("Grain must be 0..20 and sharpen must be 0..2.")
 
     source = cv2.VideoCapture(str(src_path))
     matte = cv2.VideoCapture(str(alpha_path))
@@ -90,6 +98,11 @@ def main() -> int:
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     frame_no = 0
+    yy, xx = np.mgrid[0:height, 0:width].astype(np.float32)
+    nx = (xx - (width - 1) / 2) / max(1.0, width / 2)
+    ny = (yy - (height - 1) / 2) / max(1.0, height / 2)
+    vignette_mask = np.clip(1.0 - a.vignette * np.clip((nx * nx + ny * ny) / 1.35, 0, 1), 0.0, 1.0)[..., None]
+    rng = np.random.default_rng(2026)
     with tempfile.TemporaryDirectory(prefix="octoedit-integrate-") as temp:
         silent = Path(temp) / "integrated.mp4"
         writer = cv2.VideoWriter(str(silent), cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
@@ -162,6 +175,21 @@ def main() -> int:
                     graded = np.clip(graded + rim_layer, 0, 255)
 
                 result = graded * alpha + composed_bg * (1.0 - alpha)
+
+                # Apply the cinematic finish to the complete frame, not just the subject.
+                if a.bloom > 0:
+                    highlights = np.maximum(result - 170.0, 0.0)
+                    glow = cv2.GaussianBlur(highlights, (0, 0), max(2.0, min(width, height) * 0.012))
+                    result = np.clip(result + glow * (a.bloom / 2.5), 0, 255)
+                if a.sharpen > 0:
+                    soft = cv2.GaussianBlur(result, (0, 0), 1.0)
+                    result = np.clip(result + (result - soft) * a.sharpen, 0, 255)
+                if a.vignette > 0:
+                    result *= vignette_mask
+                if a.grain > 0:
+                    noise = rng.normal(0.0, a.grain, (height, width, 1)).astype(np.float32)
+                    result = np.clip(result + noise, 0, 255)
+
                 writer.write(np.clip(result, 0, 255).astype(np.uint8))
                 frame_no += 1
                 if frame_no % 30 == 0:
