@@ -117,7 +117,8 @@ def main() -> int:
     if not fps or fps <= 0:
         fps = 30.0
 
-    background = args.background.reshape(1, 1, 3)
+    # RVM tensors are normalized to [0, 1]; convert the requested RGB color too.
+    background = (args.background / 255.0).reshape(1, 1, 3)
     recurrent_state = [None] * 4
     processed = 0
 
