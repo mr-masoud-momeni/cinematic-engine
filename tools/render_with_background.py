@@ -107,6 +107,13 @@ def main() -> int:
 
     integration_script = ROOT / "tools" / "subject_integration.py"
     edge_softness = float(effects.get("edgeSoftness", 0.8))
+    cinematic = effects.get("cinematic", {})
+    cinematic_args = [
+        "--vignette", str(float(cinematic.get("vignette", 0.18))),
+        "--grain", str(float(cinematic.get("grain", 2.0))),
+        "--sharpen", str(float(cinematic.get("sharpen", 0.18))),
+        "--bloom", str(float(cinematic.get("bloom", 0.08))),
+    ]
     crf = int(timeline.get("render", {}).get("crf", 19))
 
     with tempfile.TemporaryDirectory(prefix="octoedit-rvm-") as temp_dir:
@@ -134,6 +141,7 @@ def main() -> int:
             "--crf", str(crf),
             "--edge-softness", str(edge_softness),
             *effect_args,
+            *cinematic_args,
         ]
         run(composite_command, "2/2 — compositing subject and background")
 
