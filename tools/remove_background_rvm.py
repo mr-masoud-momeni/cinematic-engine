@@ -60,6 +60,12 @@ def main() -> int:
         default=0.25,
         help="RVM inference scale between 0 and 1 (default: 0.25)",
     )
+    parser.add_argument(
+        "--foreground-source",
+        choices=("model", "original"),
+        default="model",
+        help="Composite with RVM-estimated foreground (model) or original pixels (original)",
+    )
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--ffmpeg", default="ffmpeg")
     parser.add_argument("--crf", type=int, default=18)
@@ -125,6 +131,7 @@ def main() -> int:
     print(f"Input: {width}x{height} @ {fps:.2f} FPS")
     print(f"Frames: {frame_count or 'unknown'}")
     print(f"RVM downsample ratio: {args.downsample_ratio}")
+    print(f"Foreground source: {args.foreground_source}")
     print("Processing sequentially on CPU...")
 
     with tempfile.TemporaryDirectory(prefix="octoedit-rvm-") as temp_dir:
@@ -168,11 +175,21 @@ def main() -> int:
                     )
                     alpha = alpha[0, 0].cpu().numpy()[..., None]
 
-                    # RVM returns a soft matte; preserve it for hair and fine edges.
-                    composite = (
-                        foreground * alpha
-                        + background * (1.0 - alpha)
-                    )
+                    # Keep the two compositing strategies selectable for comparison.
+                    # "original" preserves source colors; "model" uses RVM's decontaminated foreground.
+                    if args.foreground_source == "original":
+                        source_rgb = (
+                            source_tensor[0].permute(1, 2, 0).numpy()
+                        )
+                        composite = (
+                            source_rgb * alpha
+                            + background * (1.0 - alpha)
+                        )
+                    else:
+                        composite = (
+                            foreground * alpha
+                            + background * (1.0 - alpha)
+                        )
                     composite = np.clip(
                         composite * 255.0, 0, 255
                     ).astype(np.uint8)
