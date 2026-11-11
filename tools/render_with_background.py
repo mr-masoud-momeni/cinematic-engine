@@ -109,6 +109,12 @@ def main() -> int:
     edge_softness = float(effects.get("edgeSoftness", 0.8))
     cinematic = effects.get("cinematic", {})
     cinematic_enabled = cinematic.get("enabled", True)
+    environment_light = effects.get("environmentLight", {})
+    environment_enabled = environment_light.get("enabled", True)
+    environment_args = [
+        "--environment-light",
+        str(float(environment_light.get("strength", 0.28) if environment_enabled else 0)),
+    ]
     cinematic_args = [
         "--vignette", str(float(cinematic.get("vignette", 0.18) if cinematic_enabled else 0)),
         "--grain", str(float(cinematic.get("grain", 2.0) if cinematic_enabled else 0)),
@@ -144,6 +150,7 @@ def main() -> int:
             "--edge-softness", str(edge_softness),
             *effect_args,
             *cinematic_args,
+            *environment_args,
         ]
         run(composite_command, "2/2 — compositing subject and background")
 
