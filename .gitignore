@@ -4,3 +4,13 @@ examples/output/
 *.mp4
 *.mov
 *.m4v
+
+# Python environments
+.venv/
+.venv-rvm/
+__pycache__/
+*.py[cod]
+
+# RVM test files and model
+rvm-test/
+examples/rvm-mask.png
