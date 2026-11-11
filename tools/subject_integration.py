@@ -54,7 +54,7 @@ def main() -> int:
     p.add_argument("--warmth", type=float, default=0.04, help="Warm/cool grade amount, -0.2..0.2")
     p.add_argument("--contrast", type=float, default=1.03, help="Foreground contrast")
     p.add_argument("--saturation", type=float, default=0.96, help="Foreground saturation")
-    p.add_argument("--edge-softness", type=float, default=0.8, help="Matte feather in pixels")
+    p.add_argument("--edge-softness", type=float, default=1.5, help="Gaussian feather radius for the alpha matte, in pixels")
     p.add_argument("--vignette", type=float, default=0.18, help="Cinematic edge darkening, 0..1")
     p.add_argument("--grain", type=float, default=2.0, help="Fine film grain intensity, 0..20")
     p.add_argument("--sharpen", type=float, default=0.18, help="Unsharp-mask amount, 0..2")
