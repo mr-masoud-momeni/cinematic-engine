@@ -45,7 +45,14 @@
       "contrast": 1.03,
       "saturation": 0.96
     },
-    "edgeSoftness": 0.8
+    "edgeSoftness": 0.8,
+    "cinematic": {
+      "enabled": true,
+      "vignette": 0.18,
+      "grain": 2,
+      "sharpen": 0.18,
+      "bloom": 0.08
+    }
   },
   "events": [
     {
