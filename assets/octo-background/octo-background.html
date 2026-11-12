@@ -2,60 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Octoopus Neon Studio Background</title>
+<title>Octoopus Neon Depth Background</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071326}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061326}
 #scene{position:relative;width:720px;height:1280px;overflow:hidden;isolation:isolate;background:
- radial-gradient(ellipse 82% 40% at 50% 8%,#16465a 0%,#10334b 32%,transparent 76%),
- radial-gradient(ellipse 75% 62% at 50% 58%,#0b3046 0%,#0a2239 52%,transparent 100%),
- linear-gradient(160deg,#07172c 0%,#0a2037 48%,#061326 100%)}
-#scene:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 35%,#020a17a8 100%);pointer-events:none}
-.glow{position:absolute;border-radius:50%;filter:blur(85px);pointer-events:none;mix-blend-mode:screen}
-.glow.one{width:560px;height:360px;left:80px;top:-90px;background:#35f5e32a;animation:breathe 7s ease-in-out infinite alternate}
-.glow.two{width:460px;height:520px;left:120px;top:460px;background:#087eaa1b;animation:breathe 9s ease-in-out infinite alternate-reverse}
-.glow.three{width:360px;height:260px;left:180px;bottom:-90px;background:#20d9d022;animation:breathe 8s ease-in-out infinite alternate}
-.sign{position:absolute;top:54px;left:0;width:100%;height:250px;display:flex;align-items:center;justify-content:center}
-.sign svg{width:690px;height:240px;overflow:visible}
-.mount{fill:url(#mount);stroke:#4ceee22c;stroke-width:1.4}
-.mountEdge{fill:none;stroke:#8ffff52b;stroke-width:1}
-.screw{fill:#173e50;stroke:#72f7e94a;stroke-width:1}
-.neonBack{font-family:"Segoe Print","Comic Sans MS","Brush Script MT",cursive;font-style:italic;font-weight:700;font-size:104px;letter-spacing:-5px;text-anchor:middle;fill:#063c43;stroke:#063c43;stroke-width:12;stroke-linejoin:round}
-.neonTube{font-family:"Segoe Print","Comic Sans MS","Brush Script MT",cursive;font-style:italic;font-weight:700;font-size:104px;letter-spacing:-5px;text-anchor:middle;fill:url(#tubeFill);stroke:#8bfff5;stroke-width:3.8;paint-order:stroke fill;stroke-linejoin:round;filter:url(#tubeGlow)}
-.neonCore{font-family:"Segoe Print","Comic Sans MS","Brush Script MT",cursive;font-style:italic;font-weight:700;font-size:104px;letter-spacing:-5px;text-anchor:middle;fill:none;stroke:#f1fffd;stroke-width:1.35;opacity:.88;stroke-linecap:round;filter:url(#coreGlow)}
-.glint{fill:none;stroke:#eaffff;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:20 900;opacity:0;filter:url(#coreGlow)}
-.dust{position:absolute;width:2px;height:2px;border-radius:50%;background:#a4fff8;box-shadow:0 0 9px #41faf1;opacity:0;animation:float 6s ease-in-out infinite}
-@keyframes breathe{to{transform:scale(1.18);opacity:.65}}
-@keyframes float{0%,100%{opacity:0;transform:translateY(18px)}35%,70%{opacity:.5}}
+ radial-gradient(ellipse 105% 42% at 50% 4%,#174c60 0%,#10364d 27%,transparent 72%),
+ radial-gradient(ellipse 75% 48% at 12% 42%,#0b5260 0%,#0a354b 36%,transparent 76%),
+ radial-gradient(ellipse 78% 54% at 94% 69%,#073c5a 0%,#0a2943 43%,transparent 78%),
+ radial-gradient(ellipse 60% 35% at 48% 100%,#0d4552 0%,transparent 76%),
+ linear-gradient(145deg,#07172d 0%,#0a2038 43%,#061326 100%)}
+#scene:before{content:"";position:absolute;inset:-5%;background:radial-gradient(ellipse at 50% 46%,transparent 25%,#020a18a8 100%);pointer-events:none;z-index:5}
+#scene:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0%,#37f7e907 38%,transparent 58%),radial-gradient(ellipse 70% 25% at 50% 24%,#36f5e90c,transparent 80%);pointer-events:none}
+.depth{position:absolute;border-radius:50%;filter:blur(65px);mix-blend-mode:screen;pointer-events:none}
+.depth.a{width:530px;height:350px;left:-190px;top:360px;background:#087c9638}
+.depth.b{width:480px;height:430px;right:-190px;top:650px;background:#0872a33a}
+.depth.c{width:520px;height:300px;left:100px;bottom:-180px;background:#22d9ce22}
+.depth.d{width:420px;height:270px;right:-120px;top:-130px;background:#41faf124}
+.haze{position:absolute;inset:0;opacity:.24;pointer-events:none;background:radial-gradient(ellipse 42% 18% at 50% 31%,#5df8e9 0%,transparent 100%),radial-gradient(ellipse 30% 23% at 12% 74%,#087c9a 0%,transparent 100%);filter:blur(38px)}
+.sign{position:absolute;top:52px;left:0;width:100%;height:220px;display:flex;align-items:center;justify-content:center;z-index:2}
+.sign svg{width:690px;height:220px;overflow:visible}
+.neonShadow{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:900;font-size:100px;letter-spacing:-5px;text-anchor:middle;fill:#032d39;stroke:#032d39;stroke-width:17;stroke-linejoin:round}
+.neonDepth{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:900;font-size:100px;letter-spacing:-5px;text-anchor:middle;fill:none;stroke:#087e7b;stroke-width:12;stroke-linejoin:round;filter:url(#depthShadow)}
+.neonGlass{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:900;font-size:100px;letter-spacing:-5px;text-anchor:middle;fill:url(#glass);stroke:#b8fff8;stroke-width:5.5;stroke-linejoin:round;paint-order:stroke fill;filter:url(#tubeGlow)}
+.neonCore{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:900;font-size:100px;letter-spacing:-5px;text-anchor:middle;fill:none;stroke:#effffd;stroke-width:1.35;stroke-linecap:round;opacity:.78;filter:url(#coreGlow)}
+.dust{position:absolute;width:2px;height:2px;border-radius:50%;background:#a4fff8;box-shadow:0 0 8px #41faf1;opacity:0;animation:drift 9s ease-in-out infinite}
+@keyframes drift{0%,100%{opacity:0;transform:translate3d(0,12px,0)}45%,65%{opacity:.22}}
 </style></head>
 <body><main id="scene">
-<div class="glow one"></div><div class="glow two"></div><div class="glow three"></div>
-<div class="sign"><svg viewBox="0 0 690 240" aria-label="octoopus neon sign">
+<div class="depth a"></div><div class="depth b"></div><div class="depth c"></div><div class="depth d"></div><div class="haze"></div>
+<div class="sign"><svg viewBox="0 0 690 220" aria-label="octoopus neon lettering">
 <defs>
- <linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#102f43" stop-opacity=".95"/><stop offset=".5" stop-color="#0b2439" stop-opacity=".92"/><stop offset="1" stop-color="#071a2d" stop-opacity=".98"/></linearGradient>
- <linearGradient id="tubeFill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1fffd"/><stop offset=".24" stop-color="#cafffa"/><stop offset=".58" stop-color="#69fff0"/><stop offset="1" stop-color="#27d9d1"/></linearGradient>
- <filter id="tubeGlow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="3" result="a"/><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="a"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
- <filter id="coreGlow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="3"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#effffb"/><stop offset=".18" stop-color="#bafff5"/><stop offset=".48" stop-color="#63f9e9"/><stop offset=".76" stop-color="#27d8d0"/><stop offset="1" stop-color="#0b929b"/></linearGradient>
+ <filter id="depthShadow" x="-35%" y="-70%" width="170%" height="240%"><feGaussianBlur stdDeviation="2.5"/></filter>
+ <filter id="tubeGlow" x="-45%" y="-100%" width="190%" height="300%"><feGaussianBlur stdDeviation="2.5" result="tight"/><feGaussianBlur in="SourceGraphic" stdDeviation="7" result="wide"/><feMerge><feMergeNode in="wide"/><feMergeNode in="tight"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="coreGlow" x="-40%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="2"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
-<rect class="mount" x="27" y="42" width="636" height="150" rx="34"/>
-<rect class="mountEdge" x="34" y="49" width="622" height="136" rx="29"/>
-<circle class="screw" cx="53" cy="67" r="4"/><circle class="screw" cx="637" cy="67" r="4"/>
-<circle class="screw" cx="53" cy="167" r="4"/><circle class="screw" cx="637" cy="167" r="4"/>
-<text class="neonBack" x="345" y="145">octoopus</text>
-<text class="neonTube" x="345" y="145">octoopus</text>
-<text class="neonCore" x="345" y="145">octoopus</text>
-<path class="glint" d="M95 106 Q240 45 390 92 T605 104"/>
+<!-- Layered strokes create a rounded glass tube with a dark sidewall and subtle extrusion. -->
+<text class="neonShadow" x="345" y="137">octoopus</text>
+<text class="neonDepth" x="345" y="133">octoopus</text>
+<text class="neonGlass" x="345" y="129">octoopus</text>
+<text class="neonCore" x="345" y="129">octoopus</text>
 </svg></div>
-<div class="dust" style="left:17%;top:31%;animation-delay:.3s"></div><div class="dust" style="left:78%;top:38%;animation-delay:1.7s"></div><div class="dust" style="left:84%;top:71%;animation-delay:2.8s"></div><div class="dust" style="left:21%;top:82%;animation-delay:3.6s"></div><div class="dust" style="left:53%;top:43%;animation-delay:4.2s"></div>
+<div class="dust" style="left:14%;top:34%;animation-delay:1s"></div><div class="dust" style="left:82%;top:42%;animation-delay:3.2s"></div><div class="dust" style="left:88%;top:76%;animation-delay:5s"></div><div class="dust" style="left:19%;top:83%;animation-delay:6.4s"></div>
 </main>
 <script>
-const tube=document.querySelector('.neonTube'),core=document.querySelector('.neonCore'),glint=document.querySelector('.glint');
+const tube=document.querySelector('.neonGlass'),core=document.querySelector('.neonCore'),depth=document.querySelector('.neonDepth');
 window.renderAt=function(t){
- const flicker=(t>1.08&&t<1.19)||(t>3.64&&t<3.73);
- const pulse=.91+.09*(.5+.5*Math.sin(t*2.0));
- const power=flicker?.62:pulse;
- tube.style.opacity=String(power);core.style.opacity=String(.72+.22*pulse);
- const phase=t%3.1;
- glint.style.opacity=phase<.48?String(.8*(1-phase/.48)):"0";
- glint.style.strokeDashoffset=String(-phase*220);
+ // Nearly imperceptible electrical shimmer; no bouncing, sweeping highlights or sudden flicker.
+ const shimmer=0.975+0.025*(0.5+0.5*Math.sin(t*2.35));
+ const micro=(Math.sin(t*11.7)+Math.sin(t*17.1))*0.002;
+ tube.style.opacity=String(shimmer+micro);
+ core.style.opacity=String(0.68+0.08*shimmer);
+ depth.style.opacity=String(0.88+0.04*shimmer);
 };
 </script></body></html>
