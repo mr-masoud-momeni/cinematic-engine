@@ -1,54 +1,70 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Octo animated background</title>
+<title>Octoopus Neon Coding Background</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07172e}
-#scene{position:relative;width:720px;height:1280px;overflow:hidden;background:radial-gradient(ellipse at 50% 67%,#123e52 0%,#0c2945 38%,#07172e 78%,#050f21 100%)}
-.aquaGlow{position:absolute;width:820px;height:820px;left:-50px;top:360px;border-radius:50%;background:radial-gradient(circle,#41faf22b 0%,#41faf210 38%,transparent 70%);filter:blur(28px);animation:glow 5s ease-in-out infinite alternate}
-.beam{position:absolute;top:-150px;width:170px;height:1500px;transform:rotate(24deg);background:linear-gradient(180deg,transparent,#41faf20a 40%,#41faf21a 55%,transparent);filter:blur(25px);animation:beam 8s linear infinite}
-.grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(#41faf21c 1px,transparent 1px),linear-gradient(90deg,#41faf21c 1px,transparent 1px);background-size:76px 76px;mask-image:linear-gradient(transparent,black 22%,black 82%,transparent)}
-#particles{position:absolute;inset:0}
-.bubble{position:absolute;bottom:-50px;border:1px solid #7ffefa77;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9ffff88,#41faf20c 55%,transparent 70%);box-shadow:0 0 14px #41faf229;animation:rise linear infinite}
-#octo{position:absolute;width:390px;left:165px;top:420px;opacity:0;transform:translate3d(0,760px,0) scale(.72);filter:drop-shadow(0 24px 30px #0009);transform-origin:50% 82%;will-change:transform,opacity}
-#octo svg{display:block;width:100%;height:auto;overflow:visible}
-#octo #R-Leg,#octo #R-M-Leg,#octo #L-M-Leg,#octo #L-Leg{transform-box:fill-box;transform-origin:50% 0%;will-change:transform}
-#octo #R-pupil,#octo #L-pupil,#octo #R-B-Light,#octo #R-L-Light,#octo #L-B-Light,#octo #L-L-Light{will-change:transform}
-#octo #eyes{transform-box:fill-box;transform-origin:center}
-@keyframes glow{to{transform:scale(1.16);opacity:.75}}@keyframes beam{from{left:-260px}to{left:900px}}
-@keyframes rise{to{transform:translateY(-1450px);opacity:0}}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071326}
+#scene{position:relative;width:720px;height:1280px;overflow:hidden;background:
+ radial-gradient(ellipse at 50% 12%,#12334a 0%,transparent 38%),
+ radial-gradient(ellipse at 50% 62%,#0b2038 0%,transparent 58%),
+ linear-gradient(155deg,#071326 0%,#091a30 52%,#050f20 100%);isolation:isolate}
+#scene:before{content:"";position:absolute;inset:0;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 3px,#7cebe908 4px),radial-gradient(ellipse at center,transparent 35%,#020914 100%)}
+.ambient{position:absolute;border-radius:50%;filter:blur(65px);pointer-events:none}
+.ambient.a{width:460px;height:280px;top:20px;left:130px;background:#25e8df18;animation:ambient 6s ease-in-out infinite alternate}
+.ambient.b{width:380px;height:380px;bottom:90px;left:160px;background:#087eaa12;animation:ambient 8s ease-in-out infinite alternate-reverse}
+.grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(#41faf1 1px,transparent 1px),linear-gradient(90deg,#41faf1 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(transparent 0%,black 12%,black 84%,transparent 100%)}
+.code{position:absolute;color:#70e9e4;font:13px/1.9 Consolas,monospace;white-space:pre;opacity:.16;filter:blur(.15px);user-select:none}
+.code.left{left:24px;top:340px;width:210px;transform:perspective(500px) rotateY(8deg)}
+.code.right{right:18px;top:520px;width:190px;text-align:right;transform:perspective(500px) rotateY(-8deg);opacity:.12}
+.code span{color:#41faf1}.code i{color:#7a9eb7;font-style:normal}.code b{color:#b4a2ff;font-weight:400}
+.panel{position:absolute;border:1px solid #41faf11b;border-radius:10px;background:linear-gradient(145deg,#0c294022,#07172b18);box-shadow:inset 0 0 22px #41faf108,0 8px 28px #0002}
+.panel.p1{top:390px;left:28px;width:205px;height:118px}.panel.p2{top:585px;right:24px;width:178px;height:140px}.panel.p3{bottom:145px;left:55px;width:140px;height:72px;opacity:.5}
+.panel:before{content:"";position:absolute;left:12px;right:12px;top:14px;height:1px;background:#41faf12c;box-shadow:0 14px #41faf114,0 28px #41faf114,0 42px #41faf114,0 56px #41faf114}
+.sign{position:absolute;top:76px;left:0;width:100%;height:220px;display:flex;align-items:center;justify-content:center}
+.sign svg{width:650px;height:210px;overflow:visible}
+.tube{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:700;letter-spacing:1px;font-size:94px;text-anchor:middle;fill:#cffffc;stroke:#41faf1;stroke-width:2.1;paint-order:stroke fill;filter:url(#neon);stroke-linejoin:round}
+.tubeBase{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;font-weight:700;letter-spacing:1px;font-size:94px;text-anchor:middle;fill:none;stroke:#41faf1;stroke-width:8;opacity:.23;filter:url(#wideGlow)}
+.spark{fill:none;stroke:#eaffff;stroke-width:2.8;stroke-linecap:round;stroke-dasharray:22 560;stroke-dashoffset:0;filter:url(#sparkGlow);opacity:0}
+.signFrame{fill:none;stroke:#41faf12a;stroke-width:1.2}
+.signFrameGlow{fill:none;stroke:#41faf10d;stroke-width:8;filter:url(#wideGlow)}
+.scan{position:absolute;left:0;right:0;height:1px;top:0;background:linear-gradient(90deg,transparent,#41faf124,transparent);opacity:.45;animation:scan 7s linear infinite}
+.dust{position:absolute;width:2px;height:2px;border-radius:50%;background:#8ffff9;box-shadow:0 0 8px #41faf1;opacity:0;animation:dust 5s ease-in-out infinite}
+@keyframes ambient{to{transform:scale(1.18);opacity:.65}}
+@keyframes scan{to{transform:translateY(1280px)}}
+@keyframes dust{0%,100%{opacity:0;transform:translateY(20px)}35%,70%{opacity:.55}}
 </style></head>
-<body><main id="scene"><div class="aquaGlow"></div><div class="beam"></div><div class="grid"></div><div id="particles"></div><div id="octo"><!-- OCTO_SVG --></div></main>
+<body><main id="scene">
+<div class="ambient a"></div><div class="ambient b"></div><div class="grid"></div><div class="scan"></div>
+<div class="code left"><span>const</span> octoopus = {<br>  <i>brand</i>: <b>"creative"</b>,<br>  color: <b>"#41faf1"</b>,<br>  mode: <b>"build"</b>,<br>  motion: <b>true</b><br>};<br><br><span>function</span> create(){<br>  return ideas.map(<br>    idea =&gt; build(idea)<br>  );<br>}</div>
+<div class="code right"><span>class</span> Studio {<br>  constructor(){<br>    this.focus = <b>"quality"</b>;<br>    this.stack = [<br>      <i>"design"</i>,<br>      <i>"code"</i>,<br>      <i>"motion"</i><br>    ];<br>  }<br>}<br><br><span>await</span> render();</div>
+<div class="panel p1"></div><div class="panel p2"></div><div class="panel p3"></div>
+<div class="sign">
+<svg viewBox="0 0 650 210" role="img" aria-label="octoopus neon sign">
+<defs>
+ <filter id="neon" x="-40%" y="-100%" width="180%" height="300%"><feGaussianBlur stdDeviation="3" result="b1"/><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b2"/><feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="wideGlow" x="-80%" y="-150%" width="260%" height="400%"><feGaussianBlur stdDeviation="12"/></filter>
+ <filter id="sparkGlow"><feGaussianBlur stdDeviation="4" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect class="signFrameGlow" x="30" y="38" width="590" height="128" rx="30"/>
+<rect class="signFrame" x="30" y="38" width="590" height="128" rx="30"/>
+<text class="tubeBase" x="325" y="128">octoopus</text>
+<text class="tube" x="325" y="128">octoopus</text>
+<text class="spark" x="325" y="128">octoopus</text>
+</svg></div>
+<div class="dust" style="left:28%;top:28%;animation-delay:.2s"></div><div class="dust" style="left:73%;top:34%;animation-delay:1.8s"></div><div class="dust" style="left:82%;top:73%;animation-delay:2.6s"></div><div class="dust" style="left:18%;top:80%;animation-delay:3.3s"></div>
+</main>
 <script>
-const octo=document.querySelector('#octo'),particles=document.querySelector('#particles');
-const bubbles=[{x:12,s:13,d:4.8,delay:0},{x:25,s:8,d:5.7,delay:1.1},{x:78,s:17,d:6.2,delay:.4},{x:89,s:9,d:4.9,delay:2},{x:8,s:6,d:5.4,delay:2.7},{x:68,s:7,d:4.6,delay:1.7},{x:42,s:11,d:6.5,delay:3.2},{x:95,s:5,d:5.1,delay:.8}];
-for(const b of bubbles){const el=document.createElement('i');el.className='bubble';el.style.cssText='left:'+b.x+'%;width:'+b.s+'px;height:'+b.s+'px;animation-duration:'+b.d+'s;animation-delay:-'+b.delay+'s';particles.appendChild(el)}
+const spark=document.querySelector('.spark'),tube=document.querySelector('.tube'),base=document.querySelector('.tubeBase'),a=document.querySelector('.ambient.a');
 window.renderAt=function(t){
- // Octo rises from behind the foreground person, then recedes above their head.
- const p=Math.max(0,Math.min(1,(t-.2)/2.45));
- const ease=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
- const xDrift=-20*ease;
- const y=760-(1130*ease);
- const scale=.72-(.29*ease);
- const bob=t>2.7?Math.sin((t-2.7)*2.1)*5:0;
- const tilt=t>2.7?Math.sin((t-2.7)*1.25)*1.1:0;
- octo.style.opacity=String(Math.min(1,Math.max(0,(t-.12)/.42))*(t>4.65?Math.max(0,(5-t)/.35):1));
- octo.style.transform='translate3d('+xDrift+'px,'+(y+bob)+'px,0) rotate('+tilt+'deg) scale('+scale+')';
-
- // Keep the four tentacles attached: tiny, coordinated flex instead of swinging legs.
- const pulse=Math.sin(t*2.0);
- const legs=[['L-Leg',-1.2,0],['L-M-Leg',.8,.12],['R-M-Leg',-.8,.24],['R-Leg',1.2,.36]];
- for(const [id,angle,phase] of legs){
-   const el=octo.querySelector('#'+id);
-   if(el) el.setAttribute('transform','rotate('+(angle*pulse)+' '+({ 'L-Leg':31,'L-M-Leg':151,'R-M-Leg':273,'R-Leg':393 }[id])+' 315) scale(1 '+(1+.012*Math.sin(t*2+phase))+')');
- }
- const lookX=t>2.5?Math.sin((t-2.5)*1.2)*3:0,lookY=t>2.5?Math.cos((t-2.5)*1.1)*2:0;
- for(const id of ['R-pupil','L-pupil','R-B-Light','R-L-Light','L-B-Light','L-L-Light']){
-   const el=octo.querySelector('#'+id);
-   if(el)el.setAttribute('transform','translate('+lookX+' '+lookY+')');
- }
- const blink=Math.max(0,1-Math.abs(t-3.65)/.11,1-Math.abs(t-4.45)/.10);
- const eyes=octo.querySelector('#eyes');if(eyes)eyes.style.transform='scaleY('+(1-.9*blink)+')';
+ const flicker=(t>1.15&&t<1.34)||(t>3.72&&t<3.82);
+ const pulse=.88+.12*(.5+.5*Math.sin(t*2.1));
+ const power=flicker?.32:pulse;
+ tube.style.opacity=String(power);base.style.opacity=String(.18+.08*pulse);
+ spark.style.opacity=(t%2.7<.42)?String(.95*(1-(t%2.7)/.42)):"0";
+ spark.style.strokeDashoffset=String(-((t%2.7)/.42)*560);
+ a.style.opacity=String(.55+.2*Math.sin(t*1.1));
+ document.querySelector('.scan').style.transform='translateY('+((t*182)%1280)+'px)';
 };
 </script></body></html>
