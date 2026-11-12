@@ -11,7 +11,7 @@
 .grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(#41faf21c 1px,transparent 1px),linear-gradient(90deg,#41faf21c 1px,transparent 1px);background-size:76px 76px;mask-image:linear-gradient(transparent,black 22%,black 82%,transparent)}
 #particles{position:absolute;inset:0}
 .bubble{position:absolute;bottom:-50px;border:1px solid #7ffefa77;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9ffff88,#41faf20c 55%,transparent 70%);box-shadow:0 0 14px #41faf229;animation:rise linear infinite}
-#octo{position:absolute;width:390px;left:165px;top:480px;opacity:0;transform:translateY(420px);filter:drop-shadow(0 24px 30px #0009);transform-origin:50% 82%;will-change:transform,opacity}
+#octo{position:absolute;width:390px;left:165px;top:420px;opacity:0;transform:translate3d(0,760px,0) scale(.72);filter:drop-shadow(0 24px 30px #0009);transform-origin:50% 82%;will-change:transform,opacity}
 #octo svg{display:block;width:100%;height:auto;overflow:visible}
 #octo #R-Leg,#octo #R-M-Leg,#octo #L-M-Leg,#octo #L-Leg{transform-box:fill-box;transform-origin:50% 0%;will-change:transform}
 #octo #R-pupil,#octo #L-pupil,#octo #R-B-Light,#octo #R-L-Light,#octo #L-B-Light,#octo #L-L-Light{will-change:transform}
@@ -25,15 +25,30 @@ const octo=document.querySelector('#octo'),particles=document.querySelector('#pa
 const bubbles=[{x:12,s:13,d:4.8,delay:0},{x:25,s:8,d:5.7,delay:1.1},{x:78,s:17,d:6.2,delay:.4},{x:89,s:9,d:4.9,delay:2},{x:8,s:6,d:5.4,delay:2.7},{x:68,s:7,d:4.6,delay:1.7},{x:42,s:11,d:6.5,delay:3.2},{x:95,s:5,d:5.1,delay:.8}];
 for(const b of bubbles){const el=document.createElement('i');el.className='bubble';el.style.cssText='left:'+b.x+'%;width:'+b.s+'px;height:'+b.s+'px;animation-duration:'+b.d+'s;animation-delay:-'+b.delay+'s';particles.appendChild(el)}
 window.renderAt=function(t){
- const rise=Math.max(0,Math.min(1,(t-.35)/1.35));const ease=1-Math.pow(1-rise,3);
- const dip=t>2.15&&t<2.75?Math.sin((t-2.15)/.6*Math.PI)*22:0;
- const wave=t>2.6?Math.sin((t-2.6)*2.3)*7:0;
- const tilt=t>2.3?Math.sin((t-2.3)*1.7)*2.2:0;
- octo.style.opacity=String(Math.min(1,(t-.18)/.5));
- octo.style.transform='translate3d(0,'+((1-ease)*470-dip+wave)+'px,0) rotate('+tilt+'deg) scale('+(0.92+.08*ease)+')';
- const lookX=t>2.4?Math.sin((t-2.4)*1.8)*5:0,lookY=t>2.4?Math.cos((t-2.4)*1.5)*3:0;
- for(const id of ['R-pupil','L-pupil','R-B-Light','R-L-Light','L-B-Light','L-L-Light']){const el=octo.querySelector('#'+id);if(el)el.setAttribute('transform','translate('+lookX+' '+lookY+')')}
- for(const [id,amp,phase,pivot] of [['L-Leg',9,.2,31],['L-M-Leg',8,1.6,151],['R-M-Leg',8,2.5,273],['R-Leg',9,3.4,393]]){const el=octo.querySelector('#'+id);if(el)el.setAttribute('transform','rotate('+(Math.sin(t*2.8+phase)*amp)+' '+pivot+' 315)')}
- const blink=Math.max(0,1-Math.abs(t-3.65)/.11,1-Math.abs(t-4.45)/.10);const eyes=octo.querySelector('#eyes');if(eyes)eyes.style.transform='scaleY('+(1-.9*blink)+')';
+ // Octo rises from behind the foreground person, then recedes above their head.
+ const p=Math.max(0,Math.min(1,(t-.2)/2.45));
+ const ease=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+ const xDrift=-20*ease;
+ const y=760-(1130*ease);
+ const scale=.72-(.29*ease);
+ const bob=t>2.7?Math.sin((t-2.7)*2.1)*5:0;
+ const tilt=t>2.7?Math.sin((t-2.7)*1.25)*1.1:0;
+ octo.style.opacity=String(Math.min(1,Math.max(0,(t-.12)/.42))*(t>4.65?Math.max(0,(5-t)/.35):1));
+ octo.style.transform='translate3d('+xDrift+'px,'+(y+bob)+'px,0) rotate('+tilt+'deg) scale('+scale+')';
+
+ // Keep the four tentacles attached: tiny, coordinated flex instead of swinging legs.
+ const pulse=Math.sin(t*2.0);
+ const legs=[['L-Leg',-1.2,0],['L-M-Leg',.8,.12],['R-M-Leg',-.8,.24],['R-Leg',1.2,.36]];
+ for(const [id,angle,phase] of legs){
+   const el=octo.querySelector('#'+id);
+   if(el) el.setAttribute('transform','rotate('+(angle*pulse)+' '+({ 'L-Leg':31,'L-M-Leg':151,'R-M-Leg':273,'R-Leg':393 }[id])+' 315) scale(1 '+(1+.012*Math.sin(t*2+phase))+')');
+ }
+ const lookX=t>2.5?Math.sin((t-2.5)*1.2)*3:0,lookY=t>2.5?Math.cos((t-2.5)*1.1)*2:0;
+ for(const id of ['R-pupil','L-pupil','R-B-Light','R-L-Light','L-B-Light','L-L-Light']){
+   const el=octo.querySelector('#'+id);
+   if(el)el.setAttribute('transform','translate('+lookX+' '+lookY+')');
+ }
+ const blink=Math.max(0,1-Math.abs(t-3.65)/.11,1-Math.abs(t-4.45)/.10);
+ const eyes=octo.querySelector('#eyes');if(eyes)eyes.style.transform='scaleY('+(1-.9*blink)+')';
 };
 </script></body></html>
