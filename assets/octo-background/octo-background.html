@@ -18,8 +18,8 @@
 .colorfield.b{background:radial-gradient(ellipse at 66% 60%,#18a9ed68 0%,#0d82c14a 34%,#0b506c28 54%,transparent 74%);transform:translate(6%,5%) scale(1.08)}
 .colorfield.c{background:radial-gradient(ellipse at 48% 28%,#69ffe65c 0%,#22c9d846 28%,#13a6b528 48%,transparent 70%);transform:translate(0,-4%) scale(.98)}
 .sign{position:absolute;top:54px;left:0;width:100%;height:190px;display:flex;align-items:center;justify-content:center;z-index:2}
-.sign svg{width:180px;height:190px;overflow:visible}
-.wordmark{font-family:"Segoe UI Light","Aptos Light","Helvetica Neue",Arial,sans-serif;font-size:30px;font-weight:400;letter-spacing:.25px;text-anchor:middle;fill:url(#wordColor);filter:url(#tinyWave)}
+.sign svg{width:621px;height:190px;overflow:visible}
+.wordmark{font-family:"Segoe UI Light","Aptos Light","Helvetica Neue",Arial,sans-serif;font-size:79px;font-weight:400;letter-spacing:1px;text-anchor:middle;fill:url(#wordColor);filter:url(#tinyWave)}
 </style></head>
 <body><main id="scene">
 <div class="colorfield a"></div><div class="colorfield b"></div><div class="colorfield c"></div>
@@ -31,21 +31,19 @@
   <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.15" xChannelSelector="R" yChannelSelector="G"/>
  </filter>
 </defs>
-<text class="wordmark" x="310.5" y="119" textLength="72" lengthAdjust="spacingAndGlyphs">octoopus</text>
+<text class="wordmark" x="310.5" y="119">octoopus</text>
 </svg></div>
 </main>
 <script>
 const fields=[...document.querySelectorAll('.colorfield')];
 const wave=document.querySelector('#tinyWave feTurbulence');
 window.renderAt=function(t){
- // Brighter, slow overlapping light drift: visible soft underwater shimmer.
  fields[0].style.transform='translate('+(-7+Math.sin(t*.19)*3)+'%,'+(-4+Math.cos(t*.16)*3)+'%) scale(1.04)';
  fields[1].style.transform='translate('+(6+Math.cos(t*.15)*4)+'%,'+(5+Math.sin(t*.18)*3)+'%) scale(1.08)';
  fields[2].style.transform='translate('+Math.sin(t*.13)*2+'%,'+(-4+Math.cos(t*.17)*3)+'%) scale(.98)';
  fields[0].style.opacity=String(.94+.06*Math.sin(t*.42));
  fields[1].style.opacity=String(.90+.08*Math.sin(t*.34+1.4));
  fields[2].style.opacity=String(.88+.08*Math.sin(t*.29+2.1));
- // Keep the wordmark still and clean; the background carries the motion.
  wave.setAttribute('baseFrequency','.012 .035');
  wave.setAttribute('seed','7');
 };
