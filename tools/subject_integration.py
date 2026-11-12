@@ -181,18 +181,56 @@ def main() -> int:
                     bounce = (color_reflection * 0.45 + brightness_reflection) * edge_band[..., None]
                     graded = np.clip(graded + bounce * a.environment_light, 0, 255)
 
-                # Edge light: a narrow matte boundary tinted by the environment.
+                # Adaptive inner rim: derive its color and intensity from the
+                # background immediately outside each part of the subject.
+                # The highlight is clipped to the inside of the matte, so it
+                # blends the subject into the scene without creating an outer halo.
                 if a.rim_strength > 0:
-                    matte_u8 = np.clip(alpha[..., 0] * 255, 0, 255).astype(np.uint8)
-                    dilated = cv2.dilate(matte_u8, np.ones((5, 5), np.uint8))
-                    eroded = cv2.erode(matte_u8, np.ones((5, 5), np.uint8))
-                    edge = ((dilated.astype(np.float32) - eroded.astype(np.float32)) / 255.0)
-                    edge *= (alpha[..., 0] > 0.04) & (alpha[..., 0] < 0.98)
-                    if a.rim_color is None:
-                        rim = np.mean(bg_f.reshape(-1, 3), axis=0)
-                    else:
-                        rim = a.rim_color
-                    rim_layer = edge[..., None] * rim.reshape(1, 1, 3) * a.rim_strength
+                    matte_soft = alpha[..., 0]
+                    matte_u8 = np.clip(matte_soft * 255.0, 0, 255).astype(np.uint8)
+                    radius = max(2, int(round(min(width, height) * 0.003)))
+                    kernel = cv2.getStructuringElement(
+                        cv2.MORPH_ELLIPSE, (radius * 2 + 1, radius * 2 + 1)
+                    )
+                    eroded = cv2.erode(matte_u8, kernel)
+                    inner_edge = np.clip(
+                        (matte_u8.astype(np.float32) - eroded.astype(np.float32)) / 255.0,
+                        0.0, 1.0
+                    )
+                    inner_edge *= (matte_soft > 0.08) & (matte_soft < 0.995)
+                    inner_edge = cv2.GaussianBlur(inner_edge, (0, 0), max(0.8, radius * 0.45))
+
+                    # Sample a softly blurred, local version of the actual
+                    # background. Brightness and saturation adapt per pixel.
+                    local_bg = cv2.GaussianBlur(
+                        bg_f, (0, 0), max(5.0, min(width, height) * 0.012)
+                    )
+                    local_hsv = cv2.cvtColor(
+                        np.clip(local_bg, 0, 255).astype(np.uint8), cv2.COLOR_BGR2HSV
+                    ).astype(np.float32)
+                    local_luma = cv2.cvtColor(
+                        np.clip(local_bg, 0, 255).astype(np.uint8), cv2.COLOR_BGR2GRAY
+                    ).astype(np.float32)
+
+                    # Preserve the environment hue, with a restrained lift.
+                    # Dark areas produce a softer rim; brighter/saturated areas
+                    # contribute a little more color and light.
+                    brightness = np.clip((local_luma - 24.0) / 150.0, 0.18, 1.0)
+                    saturation = np.clip(local_hsv[..., 1] / 150.0, 0.15, 1.0)
+                    adaptive_strength = a.rim_strength * (0.55 + 0.30 * brightness + 0.15 * saturation)
+
+                    # A subtle local luminance lift plus a small amount of the
+                    # sampled environment color. No fixed rim color is imposed.
+                    neutral = np.mean(local_bg, axis=2, keepdims=True)
+                    environment_tint = np.clip(local_bg - neutral, -32.0, 32.0)
+                    rim_light = (
+                        np.maximum(local_luma - 18.0, 0.0)[..., None] * 0.22
+                        + environment_tint * 0.28
+                    )
+                    rim_layer = (
+                        inner_edge[..., None] * rim_light
+                        * adaptive_strength[..., None]
+                    )
                     graded = np.clip(graded + rim_layer, 0, 255)
 
                 result = graded * alpha + composed_bg * (1.0 - alpha)
